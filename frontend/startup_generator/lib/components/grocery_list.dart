@@ -39,6 +39,10 @@ class _GroceryListState extends State<GroceryList> {
     });
   }
 
+  Future<void> _refreshData() async {
+    _loadData();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -55,12 +59,15 @@ class _GroceryListState extends State<GroceryList> {
       ));
     }
 
-    return ListView.builder(
-      itemCount: _items.length,
-      itemBuilder: (ctx, index) {
-        final item = _items[index];
-        return GroceryItemCard(groceryItem: item);
-      },
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      child: ListView.builder(
+        itemCount: _items.length,
+        itemBuilder: (ctx, index) {
+          final item = _items[index];
+          return GroceryItemCard(groceryItem: item);
+        },
+      ),
     );
   }
 }

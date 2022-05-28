@@ -10,8 +10,8 @@ class GroceryItemService {
 
     final List<GroceryItem> results =
         data.map<GroceryItem>((json) => GroceryItem.fromJson(json)).toList();
-    return [];
-    // return results;
+
+    return results;
   }
 }
 
