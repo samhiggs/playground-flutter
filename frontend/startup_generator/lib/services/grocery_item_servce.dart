@@ -30,8 +30,6 @@ class GroceryItemService {
       "purchased": false,
     });
 
-    items.add(groceryItem);
-
     return groceryItem;
   }
 }

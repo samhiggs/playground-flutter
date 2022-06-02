@@ -16,6 +16,8 @@ abstract class GroceryItemFormProvider extends ChangeNotifier {
   // OPERATIONS
   void clearItem();
   void loadItem(GroceryItem item);
+  void setCategory(Category? category);
+
   Future<GroceryItem?> saveItem();
 
   // VALIDATION
@@ -84,5 +86,10 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
   void setName(String name) {
     _groceryItem.name = name;
     handleUpdate();
+  }
+
+  @override
+  void setCategory(Category? category) {
+    _groceryItem.category = category;
   }
 }

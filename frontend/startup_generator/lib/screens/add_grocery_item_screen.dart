@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:select_form_field/select_form_field.dart';
 import 'package:startup_generator/main.dart';
+import 'package:startup_generator/models/grocery_item.dart';
 import 'package:startup_generator/providers/grocery_item_form_provider.dart';
+import 'package:startup_generator/providers/grocery_list_provider.dart';
 
 class AddGroceryItemScreen extends StatefulWidget {
   const AddGroceryItemScreen({Key? key}) : super(key: key);
@@ -35,14 +38,32 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
     final newItem = await formProvider.saveItem();
 
     if (newItem != null) {
-      print(newItem.name);
+      getIt<GroceryListProvider>().addItem(newItem);
     } else {
-      //TODO: show some error
+      print("ERROR: new item is null and therefore cannot be added");
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final categories = [
+      Category.Produce,
+      Category.Bakery,
+      Category.Dairy,
+      Category.Frozen,
+      Category.Aisle,
+      Category.Household,
+      Category.Misc,
+    ];
+
+    final List<Map<String, dynamic>> _categories = categories.map((category) {
+      Map<String, dynamic> cat = new Map<String, dynamic>();
+      final strCat = GroceryItem.stringFromCategory(category);
+      cat["value"] = strCat;
+      cat["label"] = strCat;
+      return cat;
+    }).toList();
+
     return Scaffold(
       appBar: AppBar(title: Text("Add Item"), actions: [
         formProvider.isProcessing
@@ -79,7 +100,18 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
                 formProvider.setName(value);
               },
               validator: formProvider.validateName,
-            )
+            ),
+            SelectFormField(
+              type: SelectFormFieldType.dropdown, // or can be dialog
+              // initialValue: 'misc',
+              // icon: Icon(Icons.local_offer),
+              labelText: 'Category',
+              items: _categories,
+              onChanged: (val) => {
+                formProvider.setCategory(GroceryItem.categoryFromString(val))
+              },
+              onSaved: (val) => print(val),
+            ),
           ]),
         ),
       ),
