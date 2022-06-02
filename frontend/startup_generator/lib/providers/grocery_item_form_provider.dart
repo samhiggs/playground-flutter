@@ -16,7 +16,7 @@ abstract class GroceryItemFormProvider extends ChangeNotifier {
   // OPERATIONS
   void clearItem();
   void loadItem(GroceryItem item);
-  Future<void> saveItem();
+  Future<GroceryItem?> saveItem();
 
   // VALIDATION
   String? validateName(String? value);
@@ -54,9 +54,26 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
   }
 
   @override
-  Future<void> saveItem() {
+  Future<GroceryItem?> saveItem() async {
+    if (!_form.currentState!.validate()) {
+      handleUpdate();
+      return null;
+    }
+
+    _isProcessing = true;
     handleUpdate();
-    throw UnimplementedError();
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    GroceryItem? newGroceryItem = GroceryItem.fromJson({
+      "id": 2,
+      "name": _groceryItem.name,
+      "category": "misc",
+      "purchased": false
+    });
+
+    handleUpdate();
+    _isProcessing = false;
+    return newGroceryItem;
   }
 
   @override
