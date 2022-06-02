@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:startup_generator/components/empty_list_indicator.dart';
 import 'package:startup_generator/components/grocery_item_card.dart';
-import 'package:startup_generator/models/grocery_item.dart';
+import 'package:startup_generator/providers/grocery_list_provider.dart';
 import 'package:startup_generator/services/grocery_item_servce.dart';
-import 'package:startup_generator/theme.dart';
 
 class GroceryList extends StatefulWidget {
   final Function handleAddItem;
@@ -14,44 +13,36 @@ class GroceryList extends StatefulWidget {
 }
 
 class _GroceryListState extends State<GroceryList> {
-  bool _loading = false;
-  List<GroceryItem> _items = [];
+  final listProvider = getIt<GroceryListProvider>();
 
   @override
   void initState() {
     super.initState();
-    _init();
-  }
-
-  Future<void> _init() async {
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    setState(() {
-      _loading = true;
-    });
-
-    final items = await groceryItemService.list();
-
-    setState(() {
-      _items = items;
-      _loading = false;
+    listProvider.addListener(() {
+      setStateIfMounted(() {});
     });
   }
 
   Future<void> _refreshData() async {
-    _loadData();
+    // _loadData();
+  }
+
+  void setStateIfMounted(f) {
+    // mounted is a property of a stateful widget so this protects
+    // the app from crashing.
+    if (mounted) setState(f);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
+    final items = listProvider.items;
+
+    if (!listProvider.ready) {
       return Center(
         child: CircularProgressIndicator(),
       );
     }
-    if (_items.isEmpty) {
+    if (items.isEmpty) {
       return Center(
           child: EmptyListInd(
         title: "No Grocery Items",
@@ -63,9 +54,9 @@ class _GroceryListState extends State<GroceryList> {
     return RefreshIndicator(
       onRefresh: _refreshData,
       child: ListView.builder(
-        itemCount: _items.length,
+        itemCount: items.length,
         itemBuilder: (ctx, index) {
-          final item = _items[index];
+          final item = items[index];
           return GroceryItemCard(groceryItem: item);
         },
       ),

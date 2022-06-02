@@ -17,21 +17,21 @@ class EmptyListInd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasButton = this.buttonText != null && this.onButtonPressed != null;
+    final hasButton = buttonText != null && onButtonPressed != null;
 
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Icon(Icons.no_food),
       Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text(this.title, style: ThemeText.heading6),
+        child: Text(title, style: ThemeText.heading6),
       ),
       if (hasButton)
         ElevatedButton.icon(
             onPressed: () {
               onButtonPressed!();
             },
-            icon: Icon(this.buttonIcon),
-            label: Text(this.buttonText!)),
+            icon: Icon(buttonIcon),
+            label: Text(buttonText!)),
     ]);
   }
 }

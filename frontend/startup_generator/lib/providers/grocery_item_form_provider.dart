@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:startup_generator/models/grocery_item.dart';
+import 'package:startup_generator/services/grocery_item_servce.dart';
 
 abstract class GroceryItemFormProvider extends ChangeNotifier {
   GroceryItem _groceryItem = GroceryItem();
 
   bool _isProcessing = false;
-  GlobalKey<FormState> _form = GlobalKey<FormState>();
+  final GlobalKey<FormState> _form = GlobalKey<FormState>();
 
   // GETTERS
   GroceryItem get groceryItem;
@@ -26,7 +26,7 @@ abstract class GroceryItemFormProvider extends ChangeNotifier {
 }
 
 class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
-  GroceryItemFormProviderImplementation() {}
+  GroceryItemFormProviderImplementation();
 
   void handleUpdate() {
     notifyListeners();
@@ -62,17 +62,13 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
 
     _isProcessing = true;
     handleUpdate();
-    await Future.delayed(const Duration(milliseconds: 500));
 
-    GroceryItem? newGroceryItem = GroceryItem.fromJson({
-      "id": 2,
-      "name": _groceryItem.name,
-      "category": "misc",
-      "purchased": false
-    });
+    final newGroceryItem =
+        await groceryItemService.create(_groceryItem.name, Category.Misc);
 
-    handleUpdate();
     _isProcessing = false;
+    handleUpdate();
+
     return newGroceryItem;
   }
 

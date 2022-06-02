@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:startup_generator/providers/grocery_item_form_provider.dart';
+import 'package:startup_generator/providers/grocery_list_provider.dart';
 import 'package:startup_generator/screens/add_grocery_item_screen.dart';
 import 'package:startup_generator/screens/list_screen.dart';
 import 'package:startup_generator/theme.dart';
@@ -18,6 +19,11 @@ void main() {
 void setupSingletons() {
   getIt.registerSingleton<GroceryItemFormProvider>(
     GroceryItemFormProviderImplementation(),
+    signalsReady: true,
+  );
+
+  getIt.registerSingleton<GroceryListProvider>(
+    GroceryListProviderImplementation(),
     signalsReady: true,
   );
 }
