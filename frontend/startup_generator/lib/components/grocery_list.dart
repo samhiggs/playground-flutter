@@ -6,7 +6,8 @@ import 'package:startup_generator/services/grocery_item_servce.dart';
 import 'package:startup_generator/theme.dart';
 
 class GroceryList extends StatefulWidget {
-  const GroceryList({Key? key}) : super(key: key);
+  final Function handleAddItem;
+  const GroceryList({Key? key, required this.handleAddItem}) : super(key: key);
 
   @override
   State<GroceryList> createState() => _GroceryListState();
@@ -55,7 +56,7 @@ class _GroceryListState extends State<GroceryList> {
           child: EmptyListInd(
         title: "No Grocery Items",
         buttonText: "Add Item",
-        onButtonPressed: () {},
+        onButtonPressed: widget.handleAddItem,
       ));
     }
 

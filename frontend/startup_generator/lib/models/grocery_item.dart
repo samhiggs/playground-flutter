@@ -25,25 +25,31 @@ class GroceryItem {
   Category? category;
   bool purchased = false;
 
-  GroceryItem.fromJson(Map<String, dynamic> json){
+  GroceryItem() {
+    //TODO: Maybe set some additional defaults in this constructor
+  }
+
+  GroceryItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     purchased = json['purchased'];
-    category = json['category'] != null ? categoryFromString(json['category']) : Category.Misc;
+    category = json['category'] != null
+        ? categoryFromString(json['category'])
+        : Category.Misc;
   }
 
   get categoryLabel {
-    if(category == null) {
+    if (category == null) {
       return "-";
     }
-    
+
     return GroceryItem.stringFromCategory(category!);
   }
 
   static Category? categoryFromString(String category) {
     return groceryItemCategoryMap.entries
-      .firstWhere((element) => element.value == category)
-      .key;
+        .firstWhere((element) => element.value == category)
+        .key;
   }
 
   static String? stringFromCategory(Category category) {
