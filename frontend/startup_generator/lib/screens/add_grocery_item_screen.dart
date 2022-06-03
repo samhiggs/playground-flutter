@@ -66,53 +66,50 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text("Add Item"), actions: [
-        formProvider.isProcessing
-            ? Container(
-                width: 24,
-                height: 24,
-                padding: const EdgeInsets.all(2.0),
-                alignment: Alignment.center,
-                child: CircularProgressIndicator(
-                  strokeWidth: 3,
-                  color: Colors.white,
-                  // valueColor: AlwaysStoppedAnimation(Colors.white),
-                ),
-              )
-            : TextButton(
-                onPressed: handleSave,
-                child: Text("Save",
-                    style: TextStyle(
-                      color: Colors.white,
-                    )),
-              ),
+        TextButton(
+          onPressed: formProvider.isProcessing ? null : handleSave,
+          child: Text("Save",
+              style: TextStyle(
+                color: Colors.white,
+              )),
+        ),
       ]),
       body: Form(
         key: formProvider.form,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(children: [
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: "Item Name",
-              ),
-              autofocus: true,
-              onChanged: (value) {
-                formProvider.setName(value);
-              },
-              validator: formProvider.validateName,
-            ),
-            SelectFormField(
-              type: SelectFormFieldType.dropdown, // or can be dialog
-              // initialValue: 'misc',
-              // icon: Icon(Icons.local_offer),
-              labelText: 'Category',
-              items: _categories,
-              onChanged: (val) => {
-                formProvider.setCategory(GroceryItem.categoryFromString(val))
-              },
-              onSaved: (val) => print(val),
-            ),
-          ]),
+          child: Stack(
+            children: [
+              Column(children: [
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: "Item Name",
+                  ),
+                  autofocus: true,
+                  onChanged: (value) {
+                    formProvider.setName(value);
+                  },
+                  validator: formProvider.validateName,
+                ),
+                SelectFormField(
+                  type: SelectFormFieldType.dropdown, // or can be dialog
+                  // initialValue: 'misc',
+                  // icon: Icon(Icons.local_offer),
+                  labelText: 'Category',
+                  items: _categories,
+                  onChanged: (val) => {
+                    formProvider
+                        .setCategory(GroceryItem.categoryFromString(val))
+                  },
+                  onSaved: (val) => print(val),
+                ),
+              ]),
+              if (formProvider.isProcessing)
+                Center(
+                  child: CircularProgressIndicator(),
+                )
+            ],
+          ),
         ),
       ),
     );
