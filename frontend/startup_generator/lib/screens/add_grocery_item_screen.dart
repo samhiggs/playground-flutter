@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:startup_generator/main.dart';
@@ -19,6 +21,7 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
   @override
   void initState() {
     super.initState();
+
     formProvider.addListener(() {
       setStateIfMounted(() {});
     });
@@ -38,7 +41,8 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
     final newItem = await formProvider.saveItem();
 
     if (newItem != null) {
-      getIt<GroceryListProvider>().addItem(newItem);
+      // getIt<GroceryListProvider>().addItem(newItem);
+      Navigator.of(context).pop();
     } else {
       print("ERROR: new item is null and therefore cannot be added");
     }
@@ -86,6 +90,7 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
                     labelText: "Item Name",
                   ),
                   autofocus: true,
+                  initialValue: formProvider.groceryItem.name,
                   onChanged: (value) {
                     formProvider.setName(value);
                   },
@@ -93,8 +98,7 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
                 ),
                 SelectFormField(
                   type: SelectFormFieldType.dropdown, // or can be dialog
-                  // initialValue: 'misc',
-                  // icon: Icon(Icons.local_offer),
+                  initialValue: formProvider.groceryItem.categoryValue,
                   labelText: 'Category',
                   items: _categories,
                   onChanged: (val) => {

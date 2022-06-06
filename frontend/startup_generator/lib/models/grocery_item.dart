@@ -46,6 +46,14 @@ class GroceryItem {
     return GroceryItem.stringFromCategory(category!);
   }
 
+  get categoryValue {
+    if (category == null) {
+      return "misc";
+    }
+
+    return GroceryItem.stringFromCategory(category!);
+  }
+
   static Category? categoryFromString(String category) {
     return groceryItemCategoryMap.entries
         .firstWhere((element) => element.value == category)

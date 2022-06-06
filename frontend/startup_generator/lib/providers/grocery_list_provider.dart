@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:startup_generator/models/grocery_item.dart';
 import 'package:startup_generator/services/grocery_item_servce.dart';
 
@@ -12,6 +13,7 @@ abstract class GroceryListProvider extends ChangeNotifier {
   // Operations
   void setItems(List<GroceryItem> items);
   void addItem(GroceryItem groceryItem);
+  void removeItem(GroceryItem groceryItem);
 }
 
 class GroceryListProviderImplementation extends GroceryListProvider {
@@ -38,6 +40,13 @@ class GroceryListProviderImplementation extends GroceryListProvider {
   @override
   void setItems(List<GroceryItem> items) {
     _items = items;
+    notifyListeners();
+  }
+
+  @override
+  void removeItem(GroceryItem groceryItem) {
+    final index = _items.indexWhere((element) => element.id == groceryItem.id);
+    _items.removeAt(index);
     notifyListeners();
   }
 }

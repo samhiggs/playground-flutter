@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:startup_generator/components/grocery_item_checkbox.dart';
 import 'package:startup_generator/models/grocery_item.dart';
+import 'package:startup_generator/providers/grocery_item_form_provider.dart';
+import 'package:startup_generator/providers/grocery_list_provider.dart';
+import 'package:startup_generator/screens/add_grocery_item_screen.dart';
 import 'package:startup_generator/theme.dart';
+import 'package:startup_generator/main.dart';
 
-class GroceryItemCard extends StatelessWidget {
+class GroceryItemCard extends StatefulWidget {
   final GroceryItem groceryItem;
 
   const GroceryItemCard({
@@ -12,9 +16,28 @@ class GroceryItemCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<GroceryItemCard> createState() => _GroceryItemCardState();
+}
+
+class _GroceryItemCardState extends State<GroceryItemCard> {
+  void _handleEdit() async {
+    getIt<GroceryItemFormProvider>().setItem(widget.groceryItem);
+
+    await Navigator.of(context).pushNamed(
+      AddGroceryItemScreen.routeName,
+    );
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Dismissible(
       key: UniqueKey(), //Key(groceryItem.id.toString()),
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) {
+        final provider =
+            getIt<GroceryListProvider>().removeItem(widget.groceryItem);
+      },
       background: Container(
         decoration: BoxDecoration(
           color: Colors.red,
@@ -36,19 +59,30 @@ class GroceryItemCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                children: [
-                  Text(
-                    groceryItem.name,
-                    style: ThemeText.bodyText,
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text(groceryItem.categoryLabel, style: ThemeText.caption)
-                ],
+              IconButton(
+                onPressed: _handleEdit,
+                icon: Icon(
+                  Icons.edit,
+                  size: 16,
+                ),
               ),
-              GroceryItemCheckbox(groceryItem: groceryItem),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.groceryItem.name,
+                      style: ThemeText.bodyText,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Text(widget.groceryItem.categoryLabel,
+                        style: ThemeText.caption)
+                  ],
+                ),
+              ),
+              GroceryItemCheckbox(groceryItem: widget.groceryItem),
             ],
           ),
         ),

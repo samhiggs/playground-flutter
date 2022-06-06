@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:startup_generator/models/grocery_item.dart';
+import 'package:startup_generator/providers/grocery_list_provider.dart';
 import 'package:startup_generator/services/grocery_item_servce.dart';
 
 abstract class GroceryItemFormProvider extends ChangeNotifier {
@@ -16,6 +17,7 @@ abstract class GroceryItemFormProvider extends ChangeNotifier {
   // OPERATIONS
   void clearItem();
   void loadItem(GroceryItem item);
+  void setItem(GroceryItem item);
   void setCategory(Category? category);
 
   Future<GroceryItem?> saveItem();
@@ -56,6 +58,12 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
   }
 
   @override
+  void setItem(GroceryItem item) {
+    _groceryItem = item;
+    handleUpdate();
+  }
+
+  @override
   Future<GroceryItem?> saveItem() async {
     if (!_form.currentState!.validate()) {
       handleUpdate();
@@ -65,8 +73,17 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
     _isProcessing = true;
     handleUpdate();
 
-    final newGroceryItem =
-        await groceryItemService.create(_groceryItem.name, Category.Misc);
+    bool isNew = false;
+    if (_groceryItem.id == null) {
+      isNew = true;
+    }
+
+    final newGroceryItem = await groceryItemService.create(
+        _groceryItem.name, _groceryItem.category!);
+
+    if (isNew) {
+      getIt<GroceryListProvider>().addItem(newGroceryItem);
+    }
 
     _isProcessing = false;
     handleUpdate();

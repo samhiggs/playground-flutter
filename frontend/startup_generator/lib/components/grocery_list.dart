@@ -23,14 +23,14 @@ class _GroceryListState extends State<GroceryList> {
     });
   }
 
-  Future<void> _refreshData() async {
-    // _loadData();
-  }
-
   void setStateIfMounted(f) {
     // mounted is a property of a stateful widget so this protects
     // the app from crashing.
     if (mounted) setState(f);
+  }
+
+  Future<void> _refreshData() async {
+    // _loadData();
   }
 
   @override
