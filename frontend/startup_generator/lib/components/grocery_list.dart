@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:startup_generator/components/empty_list_indicator.dart';
 import 'package:startup_generator/components/grocery_item_card.dart';
+import 'package:startup_generator/models/grocery_item.dart';
 import 'package:startup_generator/providers/grocery_list_provider.dart';
 import 'package:startup_generator/services/grocery_item_servce.dart';
 
@@ -18,6 +19,7 @@ class _GroceryListState extends State<GroceryList> {
   @override
   void initState() {
     super.initState();
+
     listProvider.addListener(() {
       setStateIfMounted(() {});
     });
@@ -54,10 +56,42 @@ class _GroceryListState extends State<GroceryList> {
     return RefreshIndicator(
       onRefresh: _refreshData,
       child: ListView.builder(
-        itemCount: items.length,
+        shrinkWrap: true,
+        itemCount: listProvider.groupedItems.entries.length,
         itemBuilder: (ctx, index) {
-          final item = items[index];
-          return GroceryItemCard(groceryItem: item);
+          final key = listProvider.groupedItems.keys.elementAt(index);
+          final group = listProvider.groupedItems[key];
+          final categoryName =
+              key != null ? GroceryItem.stringFromCategory(key) : null;
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  color: Colors.orange.shade900,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      categoryName != null ? categoryName : "-",
+                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                  ),
+                ),
+                ...group!.map((item) {
+                  return GroceryItemCard(
+                      groceryItem: item,
+                      onUpdate: () {
+                        setState(() {});
+                      });
+                }).toList(),
+              ],
+            ),
+          );
         },
       ),
     );

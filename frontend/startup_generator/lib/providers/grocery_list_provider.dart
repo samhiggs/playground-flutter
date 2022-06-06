@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:startup_generator/models/grocery_item.dart';
 import 'package:startup_generator/services/grocery_item_servce.dart';
+import 'package:collection/collection.dart';
 
 abstract class GroceryListProvider extends ChangeNotifier {
   bool ready = false;
@@ -9,6 +10,7 @@ abstract class GroceryListProvider extends ChangeNotifier {
 
   // Getters
   List<GroceryItem> get items;
+  Map<Category?, List<GroceryItem>> get groupedItems;
 
   // Operations
   void setItems(List<GroceryItem> items);
@@ -36,6 +38,12 @@ class GroceryListProviderImplementation extends GroceryListProvider {
 
   @override
   List<GroceryItem> get items => _items;
+
+  @override
+  Map<Category?, List<GroceryItem>> get groupedItems {
+    final group = groupBy(_items, (item) => (item as GroceryItem).category);
+    return group;
+  }
 
   @override
   void setItems(List<GroceryItem> items) {

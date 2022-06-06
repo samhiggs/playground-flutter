@@ -9,10 +9,12 @@ import 'package:startup_generator/main.dart';
 
 class GroceryItemCard extends StatefulWidget {
   final GroceryItem groceryItem;
+  final Function onUpdate;
 
   const GroceryItemCard({
     Key? key,
     required this.groceryItem,
+    required this.onUpdate,
   }) : super(key: key);
 
   @override
@@ -27,6 +29,7 @@ class _GroceryItemCardState extends State<GroceryItemCard> {
       AddGroceryItemScreen.routeName,
     );
     setState(() {});
+    widget.onUpdate();
   }
 
   @override
@@ -74,11 +77,6 @@ class _GroceryItemCardState extends State<GroceryItemCard> {
                       widget.groceryItem.name,
                       style: ThemeText.bodyText,
                     ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Text(widget.groceryItem.categoryLabel,
-                        style: ThemeText.caption)
                   ],
                 ),
               ),
