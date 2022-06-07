@@ -59,14 +59,40 @@ class _GroceryListState extends State<GroceryList> {
       ));
     }
 
+    // final groups =
+    Map<Category?, List<GroceryItem>> groups = listProvider.groupedItems;
+
+    if (widget.hidePurchased) {
+      groups = {};
+
+      listProvider.groupedItems.keys.forEach((key) {
+        // get the items and whether you should include the items (start with no)
+        final items = listProvider.groupedItems[key];
+        bool shouldInclude = false;
+
+        // iterate over the items, if any items are valid, then include it
+        // unfortunately you can't break a foreach loop
+        items!.forEach((item) {
+          if (!item.purchased) {
+            shouldInclude = true;
+          }
+        });
+
+        // if we got at least one item then add the group back to groups
+        if (shouldInclude) {
+          groups[key] = items;
+        }
+      });
+    }
+
     return RefreshIndicator(
       onRefresh: _refreshData,
       child: ListView.builder(
         shrinkWrap: true,
-        itemCount: listProvider.groupedItems.entries.length,
+        itemCount: groups.entries.length,
         itemBuilder: (ctx, index) {
-          final key = listProvider.groupedItems.keys.elementAt(index);
-          final group = listProvider.groupedItems[key];
+          final key = groups.keys.elementAt(index);
+          final group = groups[key];
           final filteredGroup = widget.hidePurchased
               ? group!.where(
                   (element) => !element.purchased,
