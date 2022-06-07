@@ -55,9 +55,11 @@ class GroceryItem {
   }
 
   static Category? categoryFromString(String category) {
-    return groceryItemCategoryMap.entries
-        .firstWhere((element) => element.value == category)
+    final categoryMap = groceryItemCategoryMap.entries
+        .firstWhere(
+            (element) => element.value.toLowerCase() == category.toLowerCase())
         .key;
+    return categoryMap;
   }
 
   static String? stringFromCategory(Category category) {
