@@ -80,7 +80,12 @@ class _GroceryItemCardState extends State<GroceryItemCard> {
                   ],
                 ),
               ),
-              GroceryItemCheckbox(groceryItem: widget.groceryItem),
+              GroceryItemCheckbox(
+                groceryItem: widget.groceryItem,
+                onUpdate: () {
+                  widget.onUpdate();
+                },
+              ),
             ],
           ),
         ),

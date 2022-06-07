@@ -8,7 +8,12 @@ import 'package:startup_generator/theme.dart';
 
 class GroceryList extends StatefulWidget {
   final Function handleAddItem;
-  const GroceryList({Key? key, required this.handleAddItem}) : super(key: key);
+
+  final bool hidePurchased;
+
+  const GroceryList(
+      {Key? key, required this.handleAddItem, this.hidePurchased = false})
+      : super(key: key);
 
   @override
   State<GroceryList> createState() => _GroceryListState();
@@ -62,8 +67,15 @@ class _GroceryListState extends State<GroceryList> {
         itemBuilder: (ctx, index) {
           final key = listProvider.groupedItems.keys.elementAt(index);
           final group = listProvider.groupedItems[key];
-          final categoryName =
-              key != null ? GroceryItem.stringFromCategory(key) : null;
+          final filteredGroup = widget.hidePurchased
+              ? group!.where(
+                  (element) => !element.purchased,
+                )
+              : group;
+
+          final categoryName = key != null
+              ? GroceryItem.stringFromCategory(key)!.toUpperCase()
+              : null;
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -75,7 +87,7 @@ class _GroceryListState extends State<GroceryList> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      categoryName != null ? categoryName : "-",
+                      categoryName ?? "-",
                       style: Theme.of(context).textTheme.subtitle1?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
@@ -83,7 +95,7 @@ class _GroceryListState extends State<GroceryList> {
                     ),
                   ),
                 ),
-                ...group!.map((item) {
+                ...filteredGroup!.map((item) {
                   return GroceryItemCard(
                       groceryItem: item,
                       onUpdate: () {

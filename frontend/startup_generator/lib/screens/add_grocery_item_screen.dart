@@ -64,7 +64,7 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
       Map<String, dynamic> cat = <String, dynamic>{};
       final strCat = GroceryItem.stringFromCategory(category);
       cat["value"] = strCat;
-      cat["label"] = strCat;
+      cat["label"] = strCat!.toUpperCase();
       return cat;
     }).toList();
 
