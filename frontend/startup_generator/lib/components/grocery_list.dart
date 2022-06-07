@@ -4,6 +4,7 @@ import 'package:startup_generator/components/grocery_item_card.dart';
 import 'package:startup_generator/models/grocery_item.dart';
 import 'package:startup_generator/providers/grocery_list_provider.dart';
 import 'package:startup_generator/services/grocery_item_servce.dart';
+import 'package:startup_generator/theme.dart';
 
 class GroceryList extends StatefulWidget {
   final Function handleAddItem;
@@ -69,7 +70,7 @@ class _GroceryListState extends State<GroceryList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  color: Colors.orange.shade900,
+                  color: ThemeColors.secondary,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),

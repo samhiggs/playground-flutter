@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:startup_generator/models/grocery_item.dart';
 import 'package:startup_generator/providers/grocery_list_provider.dart';
 import 'package:startup_generator/services/grocery_item_servce.dart';
+import 'package:startup_generator/services/toast_service.dart';
 
 abstract class GroceryItemFormProvider extends ChangeNotifier {
   GroceryItem _groceryItem = GroceryItem();
@@ -82,7 +83,10 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
         _groceryItem.name, _groceryItem.category!);
 
     if (isNew) {
+      ToastService.success("${newGroceryItem.name} Added");
       getIt<GroceryListProvider>().addItem(newGroceryItem);
+    } else {
+      ToastService.success("${newGroceryItem.name} Updated");
     }
 
     _isProcessing = false;

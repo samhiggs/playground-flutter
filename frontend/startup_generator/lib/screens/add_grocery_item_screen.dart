@@ -6,6 +6,7 @@ import 'package:startup_generator/main.dart';
 import 'package:startup_generator/models/grocery_item.dart';
 import 'package:startup_generator/providers/grocery_item_form_provider.dart';
 import 'package:startup_generator/providers/grocery_list_provider.dart';
+import 'package:startup_generator/services/toast_service.dart';
 
 class AddGroceryItemScreen extends StatefulWidget {
   const AddGroceryItemScreen({Key? key}) : super(key: key);
@@ -41,10 +42,9 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
     final newItem = await formProvider.saveItem();
 
     if (newItem != null) {
-      // getIt<GroceryListProvider>().addItem(newItem);
       Navigator.of(context).pop();
     } else {
-      print("ERROR: new item is null and therefore cannot be added");
+      ToastService.error("A problem occurred");
     }
   }
 
@@ -61,7 +61,7 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
     ];
 
     final List<Map<String, dynamic>> _categories = categories.map((category) {
-      Map<String, dynamic> cat = new Map<String, dynamic>();
+      Map<String, dynamic> cat = <String, dynamic>{};
       final strCat = GroceryItem.stringFromCategory(category);
       cat["value"] = strCat;
       cat["label"] = strCat;
