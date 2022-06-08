@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:startup_generator/components/grocery_list.dart';
 import 'package:startup_generator/models/grocery_item.dart';
 import 'package:startup_generator/providers/grocery_list_provider.dart';
 import 'package:startup_generator/services/grocery_item_servce.dart';
@@ -74,25 +75,23 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
     _isProcessing = true;
     handleUpdate();
 
-    bool isNew = false;
     if (_groceryItem.id == null) {
-      isNew = true;
-    }
-
-    final newGroceryItem = await groceryItemService.create(
-        _groceryItem.name, _groceryItem.category!);
-
-    if (isNew) {
+      final newGroceryItem = await groceryItemService.create(
+        _groceryItem.name,
+        _groceryItem.category!,
+      );
       ToastService.success("${newGroceryItem.name} Added");
       getIt<GroceryListProvider>().addItem(newGroceryItem);
     } else {
-      ToastService.success("${newGroceryItem.name} Updated");
+      final updatedGroceryItem =
+          await groceryItemService.updateItem(_groceryItem.id!, _groceryItem);
+      ToastService.success("${updatedGroceryItem.name} Updated");
     }
 
     _isProcessing = false;
     handleUpdate();
 
-    return newGroceryItem;
+    return _groceryItem;
   }
 
   @override

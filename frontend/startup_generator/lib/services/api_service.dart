@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:startup_generator/models/grocery_item.dart';
 
 // use dart env when going to production
 const API_VERSION = "v1";
@@ -28,5 +29,27 @@ class ApiService {
     final url = "$API_BASE_URL$path?$query";
     final response = await Dio().get(url);
     return {"results": response.data};
+  }
+
+  Future<Map<String, dynamic>> post(
+    String path, [
+    Map<String, dynamic> params = const {},
+  ]) async {
+    final url = "$API_BASE_URL$path/";
+    final response = await Dio().post(url, data: params);
+    return response.data;
+  }
+
+  Future<void> delete(String path) async {
+    final url = "$API_BASE_URL$path";
+    final response = await Dio().delete(url);
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> update(
+      String path, Map<String, dynamic> params) async {
+    final url = "$API_BASE_URL$path";
+    final response = await Dio().put(url, data: params);
+    return response.data;
   }
 }

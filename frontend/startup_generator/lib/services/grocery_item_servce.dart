@@ -13,7 +13,7 @@ class GroceryItemService extends ApiService {
     // await Future.delayed(const Duration(milliseconds: 1000));
 
     final data = await get("/items/");
-    print(data);
+
     final List<GroceryItem> results = data["results"]
         .map<GroceryItem>((json) => GroceryItem.fromJson(json))
         .toList();
@@ -22,16 +22,30 @@ class GroceryItemService extends ApiService {
   }
 
   Future<GroceryItem> create(String name, Category category) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    final groceryItem = GroceryItem.fromJson({
-      "id": 99,
+    final categoryName = GroceryItem.stringFromCategory(category);
+    final params = {
       "name": name,
-      "category": GroceryItem.stringFromCategory(category),
+      "category": categoryName,
       "purchased": false,
-    });
+    };
+    final data = await post("/items", params);
 
-    return groceryItem;
+    return GroceryItem.fromJson(data);
+  }
+
+  Future<void> deleteItem(GroceryItem item) async {
+    await delete("/items/${item.id}");
+  }
+
+  Future<GroceryItem> updateItem(int id, GroceryItem item) async {
+    final params = {
+      "name": item.name,
+      "category": item.categoryValue,
+      "purchased": item.purchased,
+    };
+    print("item id is $id");
+    final data = await update("/items/${item.id}", params);
+    return GroceryItem.fromJson(data);
   }
 }
 
