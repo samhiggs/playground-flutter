@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:startup_generator/models/grocery_item.dart';
 import 'package:startup_generator/services/grocery_item_servce.dart';
 import 'package:collection/collection.dart';

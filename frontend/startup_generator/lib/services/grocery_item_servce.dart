@@ -37,13 +37,17 @@ class GroceryItemService extends ApiService {
     await delete("/items/${item.id}");
   }
 
+  Future<void> purchaseItem(GroceryItem item, bool purchase) async {
+    String endpoint = purchase ? "purchase" : "unpurchase";
+    await post("/items/${item.id}/$endpoint");
+  }
+
   Future<GroceryItem> updateItem(int id, GroceryItem item) async {
     final params = {
       "name": item.name,
       "category": item.categoryValue,
       "purchased": item.purchased,
     };
-    print("item id is $id");
     final data = await update("/items/${item.id}", params);
     return GroceryItem.fromJson(data);
   }
