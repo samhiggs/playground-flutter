@@ -75,6 +75,9 @@ class GroceryItemFormProviderImplementation extends GroceryItemFormProvider {
     _isProcessing = true;
     handleUpdate();
 
+    if (_groceryItem.category == null) {
+      setCategory(GroceryItem.categoryFromString("misc"));
+    }
     if (_groceryItem.id == null) {
       final newGroceryItem = await groceryItemService.create(
         _groceryItem.name,

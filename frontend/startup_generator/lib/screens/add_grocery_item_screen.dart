@@ -105,7 +105,6 @@ class _AddGroceryItemScreenState extends State<AddGroceryItemScreen> {
                     formProvider
                         .setCategory(GroceryItem.categoryFromString(val))
                   },
-                  onSaved: (val) => print(val),
                 ),
               ]),
               if (formProvider.isProcessing)

@@ -5,11 +5,19 @@ import 'package:startup_generator/providers/grocery_list_provider.dart';
 import 'package:startup_generator/screens/add_grocery_item_screen.dart';
 import 'package:startup_generator/screens/list_screen.dart';
 import 'package:startup_generator/theme.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'firebase_options.dart';
 
 GetIt getIt = GetIt.instance;
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized;
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // final Future<FirebaseApp> _fbApp =
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   setupSingletons();
 
@@ -29,6 +37,7 @@ void setupSingletons() {
 }
 
 class MyApp extends StatelessWidget {
+  // final FirebaseApp = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -41,3 +50,16 @@ class MyApp extends StatelessWidget {
         });
   }
 }
+
+// future thing to learn + implement later
+// FutureBuilder(
+//   future: _fbApp,
+//   builder: (context, snapshot) {
+//     if (snapshot.hasError) {
+//       print("You have an error. This should really display an error screen ${snapshot.error.toString()}");
+//       return Text("Something went wrong");
+//     } else if (snapshot.hasData) {
+//       return ListScreen() // Not sure if this is the right thing to do
+//     }
+//   },
+// );

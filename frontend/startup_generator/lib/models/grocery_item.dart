@@ -20,7 +20,7 @@ const groceryItemCategoryMap = {
 };
 
 class GroceryItem {
-  int? id;
+  String? id;
   String name = "";
   Category? category;
   bool purchased = false;

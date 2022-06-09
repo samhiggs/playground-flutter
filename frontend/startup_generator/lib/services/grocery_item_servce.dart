@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:startup_generator/models/grocery_item.dart';
 import 'package:startup_generator/services/api_service.dart';
+import 'package:startup_generator/services/firebase_service.dart';
 
 GetIt getIt = GetIt.instance;
 
@@ -9,15 +10,16 @@ class GroceryItemService extends ApiService {
   List<GroceryItem> items = [];
 
   Future<List<GroceryItem>> list() async {
-    // const data = groceryItems;
-    // await Future.delayed(const Duration(milliseconds: 1000));
-
-    final data = await get("/items/");
-
-    final List<GroceryItem> results = data["results"]
-        .map<GroceryItem>((json) => GroceryItem.fromJson(json))
-        .toList();
-
+    // final data = await get("/items/");
+    final data = await FirebaseService().get("/items");
+    final mappedData = Map<String, dynamic>.from(data)["results"];
+    final List<GroceryItem> results = [];
+    mappedData.forEach((k, v) {
+      v["id"] = k;
+      // cast internal hash mappy thing to a usable map
+      Map<String, dynamic> valClean = Map<String, dynamic>.from(v);
+      results.add(GroceryItem.fromJson(valClean));
+    });
     return results;
   }
 
@@ -28,7 +30,9 @@ class GroceryItemService extends ApiService {
       "category": categoryName,
       "purchased": false,
     };
-    final data = await post("/items", params);
+
+    // final data = await post("/items", params);
+    final data = await FirebaseService().post("/items", params);
 
     return GroceryItem.fromJson(data);
   }
@@ -42,7 +46,7 @@ class GroceryItemService extends ApiService {
     await post("/items/${item.id}/$endpoint");
   }
 
-  Future<GroceryItem> updateItem(int id, GroceryItem item) async {
+  Future<GroceryItem> updateItem(String id, GroceryItem item) async {
     final params = {
       "name": item.name,
       "category": item.categoryValue,
