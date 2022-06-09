@@ -24,8 +24,7 @@ class _GroceryItemCheckboxState extends State<GroceryItemCheckbox> {
           widget.groceryItem.purchased = !widget.groceryItem.purchased;
           setState(() {});
           widget.onUpdate();
-          groceryItemService.purchaseItem(
-              widget.groceryItem, widget.groceryItem.purchased);
+          groceryItemService.togglePurchase(widget.groceryItem.id!);
         },
         icon: Icon(widget.groceryItem.purchased
             ? Icons.check_box

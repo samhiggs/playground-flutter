@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:startup_generator/models/grocery_item.dart';
 
 class FirebaseService {
   final DatabaseReference database = FirebaseDatabase.instance.ref();
@@ -38,15 +39,11 @@ class FirebaseService {
   }
 
   Future<void> delete(String path) async {
-    // final url = "$API_BASE_URL$path";
-    // final response = await Dio().delete(url,
-    //     options: Options(
-    //       headers: authHeader,
-    //     ));
+    final item = database.child(path);
+    item.remove();
   }
 
-  Future<Map<String, dynamic>> update(
-      String path, Map<String, dynamic> params) async {
+  Future<Map<String, dynamic>> update(bool purchase, GroceryItem params) async {
     // final url = "$API_BASE_URL$path";
     // final response = await Dio().put(url,
     //     data: params,
@@ -55,5 +52,19 @@ class FirebaseService {
     //     ));
     Map<String, dynamic> data = {};
     return data;
+  }
+
+  Future<Map<String, dynamic>> togglePurchase(String path) async {
+    final item = database.child(path);
+    final snapshot = await item.get();
+    final data;
+
+    if (snapshot.exists) {
+      data = Map<String, dynamic>.from(snapshot.value as Map);
+      data["purchased"] = !data["purchased"];
+      item.update(data);
+      return data;
+    }
+    return {};
   }
 }

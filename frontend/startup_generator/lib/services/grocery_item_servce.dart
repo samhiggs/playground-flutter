@@ -38,12 +38,13 @@ class GroceryItemService extends ApiService {
   }
 
   Future<void> deleteItem(GroceryItem item) async {
-    await delete("/items/${item.id}");
+    await FirebaseService().delete("/items/${item.id}");
   }
 
   Future<void> purchaseItem(GroceryItem item, bool purchase) async {
     String endpoint = purchase ? "purchase" : "unpurchase";
     await post("/items/${item.id}/$endpoint");
+    await FirebaseService().update(purchase, item);
   }
 
   Future<GroceryItem> updateItem(String id, GroceryItem item) async {
@@ -54,6 +55,10 @@ class GroceryItemService extends ApiService {
     };
     final data = await update("/items/${item.id}", params);
     return GroceryItem.fromJson(data);
+  }
+
+  Future<void> togglePurchase(String id) async {
+    FirebaseService().togglePurchase("items/$id");
   }
 }
 
